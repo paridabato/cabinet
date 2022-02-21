@@ -1,0 +1,10 @@
+{% extends 'bootstrap_5_layout.html.twig' %}
+
+{% block form_widget_simple -%}
+    {% if errors|length > 0 -%}
+        {% set attr = attr|merge({class: (attr.class|default('') ~ ' error')|trim}) %}
+    {% endif %}
+    {{- parent() -}}
+    <div class="valid-feedback"></div>
+    <div class="invalid-feedback"></div>
+{%- endblock form_widget_simple %}

@@ -41,7 +41,8 @@
         $( document ).ready(function() {
             let register_PhoneNumber = document.querySelector("#register_PhoneNumber");
             let register_IPCountry = document.querySelector("#register_IPCountry");
-            window.intlTelInput(register_PhoneNumber, {
+            let errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
+            let iti = window.intlTelInput(register_PhoneNumber, {
                 initialCountry: "auto",
                 nationalMode: false,
                 geoIpLookup: function(success, failure) {
@@ -52,6 +53,25 @@
                     });
                 },
             });
+            let reset = function(ss) {
+                register_PhoneNumber.classList.remove("error");
+                $(ss).closest('.form-group').find('.invalid-feedback').html('').hide();
+                $(ss).closest('.form-group').find('.valid-feedback').html('').hide();
+            };
+            register_PhoneNumber.addEventListener('blur', function() {
+                reset(this);
+                if (register_PhoneNumber.value.trim()) {
+                    if (iti.isValidNumber()) {
+                        $(this).closest('.form-group').find('.valid-feedback').html('Valid!').show();
+                    } else {
+                        register_PhoneNumber.classList.add("error");
+                        let errorCode = iti.getValidationError();
+                        $(this).closest('.form-group').find('.invalid-feedback').html(errorMap[errorCode]).show();
+                    }
+                }
+            });
+            register_PhoneNumber.addEventListener('change', reset);
+            register_PhoneNumber.addEventListener('keyup', reset);
         });
     </script>
 {% endblock %}
