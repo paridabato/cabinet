@@ -18,6 +18,8 @@ class DefaultController extends AbstractController{
 
     /**
      * @Route("/", name="index")
+     * @param Request $request
+     * @return Response
      */
     public function index(Request $request): Response
     {
@@ -31,6 +33,8 @@ class DefaultController extends AbstractController{
 
     /**
      * @Route("/login", name="login")
+     * @param Request $request
+     * @return Response
      */
     public function login(Request $request): Response
     {
@@ -49,7 +53,7 @@ class DefaultController extends AbstractController{
             $request->getSession()->set('ClientID', $getToken['ClientID']);
             $request->getSession()->set('ClientEmail', $getToken['ClientEmail']);
 
-            return $this->redirectToRoute('cabinet');
+            return $this->redirectToRoute('profile');
         }
 
         return $this->renderForm('login/index.html.twig', [
@@ -58,7 +62,22 @@ class DefaultController extends AbstractController{
     }
 
     /**
+     * @Route("/logout", name="logout")
+     * @param Request $request
+     * @return Response
+     */
+    public function logout(Request $request): Response
+    {
+        $request->getSession()->remove('ClientID');
+
+        return $this->redirectToRoute('login');
+    }
+
+    /**
      * @Route("/register", name="register")
+     * @param Request $request
+     * @param MailerInterface $mailer
+     * @return Response
      * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
      */
     public function register(Request $request, MailerInterface $mailer): Response
@@ -114,6 +133,8 @@ class DefaultController extends AbstractController{
 
     /**
      * @Route("/confirm", name="confirm")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function confirm(Request $request){
         $ConfirmCode = $request->query->get('ConfirmCode');

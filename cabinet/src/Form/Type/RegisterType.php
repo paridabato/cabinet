@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
@@ -14,6 +15,7 @@ class RegisterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $data = $builder->getData();
         $builder
             ->add('FirstName', TextType::class, [
                 'row_attr' => [
@@ -35,16 +37,46 @@ class RegisterType extends AbstractType
                     'class' => 'form-control-user'
                 ]
             ])
-            ->add('Email', EmailType::class, [
-                'row_attr' => [
-                    'class' => 'form-group'
-                ],
-                'label' => false,
-                'attr' => [
-                    'placeholder' => 'Email',
-                    'class' => 'form-control-user'
-                ]
-            ])
+        ;
+        if(!isset($data['ID'])) {
+            $builder
+                ->add('Email', EmailType::class, [
+                    'row_attr' => [
+                        'class' => 'form-group'
+                    ],
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => 'Email',
+                        'class' => 'form-control-user'
+                    ],
+                    'disabled' => isset($data['ID'])
+                ]);
+        }
+        if(isset($data['ID'])) {
+            $builder
+                ->add('Address', TextType::class, [
+                    'row_attr' => [
+                        'class' => 'form-group'
+                    ],
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => 'Address',
+                        'class' => 'form-control-user'
+                    ]
+                ])
+                ->add('City', TextType::class, [
+                    'row_attr' => [
+                        'class' => 'form-group'
+                    ],
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => 'City',
+                        'class' => 'form-control-user'
+                    ]
+                ])
+            ;
+        }
+        $builder
             ->add('IPCountry', CountryType::class, [
                 'row_attr' => [
                     'class' => 'form-group'
@@ -55,27 +87,50 @@ class RegisterType extends AbstractType
                     'class' => 'form-control-user'
                 ]
             ])
+        ;
+        if(isset($data['ID'])) {
+            $builder
+                ->add('Email', EmailType::class, [
+                    'row_attr' => [
+                        'class' => 'form-group'
+                    ],
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => 'Email',
+                        'class' => 'form-control-user'
+                    ],
+                    'disabled' => isset($data['ID'])
+                ])
+            ;
+        }
+        $builder
             ->add('PhoneNumber', TelType::class, [
                 'row_attr' => [
                     'class' => 'form-group'
                 ],
                 'label' => false,
                 'attr' => [
-//                    'placeholder' => 'Phone Number',
                     'class' => 'form-control-user'
-                ]
-            ])
-            ->add('Password', PasswordType::class, [
-                'row_attr' => [
-                    'class' => 'form-group'
                 ],
-                'label' => false,
-                'attr' => [
-                    'placeholder' => 'Password'
-                ]
+                'disabled' => isset($data['ID'])
             ])
+        ;
+        if(!isset($data['ID'])) {
+            $builder
+                ->add('Password', PasswordType::class, [
+                    'row_attr' => [
+                        'class' => 'form-group'
+                    ],
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => 'Password'
+                    ]
+                ])
+            ;
+        }
+        $builder
             ->add('save', SubmitType::class, [
-                'label' => 'Register Now',
+                'label' => !isset($data['ID'])?'Register Now':'Save profile data',
                 'row_attr' => [
                     'class' => 'form-group'
                 ],
